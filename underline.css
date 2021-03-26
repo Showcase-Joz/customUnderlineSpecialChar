@@ -1,0 +1,17 @@
+/*** Custom underline styling ***/
+.line.customUnderline span {
+    display: inline-block;
+    position: relative;
+    width: fit-content;
+}
+
+.line.customUnderline span::after {
+    background: pink;
+    bottom: -0.06em;
+    content: '';
+    display: block;
+    height: 0.06em;
+    left: 0;
+    position: absolute;
+    right: 0;
+}
