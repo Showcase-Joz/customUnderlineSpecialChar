@@ -4,16 +4,18 @@ function spchunderline(selector) {
     // iterate over array items with function
     setTimeout(() => {
         for (const [index, item] of allInstances.entries()) {
-            // check if item has a token-value child, and with a >0 length
             let sampleElement = item.getElementsByTagName('token-value')[0];
-            if (item.children[0].tagName === 'TOKEN-VALUE' && sampleElement.innerText.length) {
-                runInstance(sampleElement, index);
+            if (item.children[0].tagName === 'TOKEN-VALUE') {
+                let updatedContent = runInstance(sampleElement);
+                let newItem = newElement(updatedContent);
+                insertNewElement(sampleElement, newItem);
+                sampleElement.style.display = 'none';
             }
         }
     }, 500);
 
     // the function
-    function runInstance(item, index) {
+    function runInstance(item) {
         const captureGroup = /[,.?;:'!()]/g;
         let cutString = '';
         let newString = '';
@@ -60,13 +62,19 @@ function spchunderline(selector) {
         // replace in DOM based on last char type
         if (cutString.length > 0) {
             newString = cutString;
-            output = addUnderline("Underline +lastChars:", newString);
-            document.querySelectorAll(selector[index])[0].innerHTML = output;
-
+            output = addUnderline("MODIFIED:", newString);
+            return output;
+            //let newItem = newElement(output);
+            //insertNewElement(item, newItem);
+            // item.style.display = 'none';
         } else {
-            output = addUnderline("Underline:", inputString);
-            document.querySelectorAll(selector[index])[0].innerHTML = output;
+            output = addUnderline("ORIGINAL:", inputString);
+            return output;
+            // let newItem = newElement(output);
+            // insertNewElement(item, newItem);
+            // item.style.display = 'none';
         }
+        return;
     }
 
     function swapQuoteType(substring, remove, addOpen, addClose) {
@@ -108,6 +116,19 @@ function spchunderline(selector) {
             return chars.join('');
         }
         return newString;
+    }
+
+    function newElement(newContent) {
+        let newDiv = document.createElement('div');
+        newDiv.classList.add("non-editable");
+        newDiv.innerHTML = newContent;
+        return newDiv;
+    }
+
+    function insertNewElement(item, replacement) {
+
+        let parent = item.parentNode;
+        parent.insertBefore(replacement, item);
     }
 }
 
